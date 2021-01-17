@@ -1,0 +1,118 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 800px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.operation {
+    text-align: right;
+}
+button {
+    border: none;
+    color: #666;
+    padding: 5px 10px;
+    outline: none;
+    border-radius: 4px;
+    margin-left: 8px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+}
+button:hover {
+    background-color: #e0e0e0;
+}
+button:active {
+    opacity: 0.7;
+}
+button img {
+    width: 16px;
+    vertical-align: text-top;
+    margin-right: 4px;
+}
+
+.empty-img {
+    margin: 0 auto;
+    display: block;
+}
+
+.cookie-item {
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid #999;
+    color: #666;
+    position: relative;
+}
+.cookie-item:first-child {
+    color: #000;
+    position: sticky;
+    top: 0px;
+    padding-top: 20px;
+    background: #fff;
+    z-index: 1;
+}
+.cookie-item:first-child div {
+    padding: 10px 6px;
+    background: #f9f9f9;
+    border-top: 1px solid #999;
+}
+.cookie-item:not(:first-child):hover {
+    background: #f9f9f9;
+}
+.cookie-item div {
+    flex: 1;
+    padding: 6px;
+    border-right: 1px solid #ddd;
+    box-sizing: border-box;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.cookie-item div:first-child {
+    border-left: 1px solid #ddd;
+}
+.cookie-item .cookie-item-secure {
+    flex: 0.5;
+}
+.cookie-item .cookie-item-http {
+    flex: 0.5;
+}
+
+.cookie-item .cookie-item-delete {
+    display: none;
+    position: absolute;
+    right: 5px;
+    top: 6px;
+}
+.cookie-item:hover .cookie-item-delete {
+    display: inline-block;
+}
+
+.cookie-item-delete img,
+.cookie-item-secure img,
+.cookie-item-http img {
+    width: 20px;
+    cursor: pointer;
+}
+
+.cookie-item .cookie-item-delete img {
+    opacity: 0.3;
+}
+
+.cookie-item .cookie-item-delete img:hover {
+    opacity: 1;
+}
+
+/* list transition */
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: scale(0.7);
+}

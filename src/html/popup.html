@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Master</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.5/vue.global.prod.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../style/popup.css">
+</head>
+<body>
+    <div id="app">
+        <div class="operation">
+            <button title="Copy all cookies" @click="onCopy"><img src="../asset/copy.svg" />copy</button>
+            <button title="Copy with flat data structure" @click="onPlainCopy"><img src="../asset/copy.svg" />flat copy</button>
+            <button title="Clear all cookies" @click="onClear"><img src="../asset/delete.svg" />clear</button>
+            <button title="Import cookies in current root domain which in standard structure" @click="onImport"><img src="../asset/import.svg" />import</button>
+        </div>
+        <div class="cookie">
+            <div class="cookie-item">
+                <div>NAME</div>
+                <div>VALUE</div>
+                <div>DOMAIN</div>
+                <div class="cookie-item-http">HTTP ONLY</div>
+                <div class="cookie-item-secure">SECURE</div>
+            </div>
+            <transition-group  v-if="cookieList.length" name="list">
+                <div class="cookie-item" v-for="(el, i) in cookieList" :key="`${el.name}${el.value}`">
+                    <div :title="el.name">{{ el.name }}</div>
+                    <div :title="el.value">{{ el.value }}</div>
+                    <div>{{ el.domain }}</div>
+                    <div class="cookie-item-http">
+                        <img @click="toggleHttpOnly(i)" v-show="el.httpOnly" src="../asset/check.svg" alt="">
+                        <img @click="toggleHttpOnly(i)" v-show="!el.httpOnly" src="../asset/uncheck.svg" alt="">
+                    </div>
+                    <div class="cookie-item-secure">
+                        <img @click="toggleSecure(i)" v-show="el.secure" src="../asset/check.svg" alt="">
+                        <img @click="toggleSecure(i)" v-show="!el.secure" src="../asset/uncheck.svg" alt="">
+                    </div>
+                    <section class="cookie-item-delete">
+                        <img src="../asset/delete.svg" title="delete this cookie" @click="onDelete(i)" />
+                    </section>
+                </div>
+            </transition-group>
+            <img v-else class="empty-img" src="../asset/empty.svg" alt="" />
+        </div>
+    </div>
+    <script type="module" src="../script/popup.js"></script>
+</body>
+</html>

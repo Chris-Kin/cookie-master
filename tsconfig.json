@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      /* 基础配置 */
+      "target": "esnext",
+      "lib": [
+        "dom",
+        "esnext"
+      ],
+      "removeComments": false,
+      "declaration": true,
+      "sourceMap": true,
+  
+      /* 强类型检查配置 */
+      "strict": true,
+      "noImplicitAny": false,
+    }
+}

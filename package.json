@@ -1,0 +1,33 @@
+{
+  "name": "cookie-master",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf dist",
+    "dev": "rollup --watch --config rollup.config.js",
+    "build": "npm run clean && rollup --config rollup.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chris-Kin/cookie-master.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Chris-Kin/cookie-master/issues"
+  },
+  "homepage": "https://github.com/Chris-Kin/cookie-master#readme",
+  "devDependencies": {
+    "eslint": "^7.17.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "install": "^0.13.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.36.1",
+    "rollup-plugin-typescript": "^1.0.1",
+    "tslib": "^2.1.0",
+    "typescript": "^4.1.3"
+  }
+}
