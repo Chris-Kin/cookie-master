@@ -16,7 +16,7 @@ indent_size = 2
 
 [Makefile,*.mk,*.mak}]
 indent_style = tab
-tab_width = 4
+tab_width = 2
 
 [*.md]
 trim_trailing_whitespace = false

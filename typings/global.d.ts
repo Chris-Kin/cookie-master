@@ -2,7 +2,7 @@ export {};
 
 declare global {
     interface Window {
-        chrome: string;
+        chrome: any;
     }
 
     type Nullable<T> = T | null;

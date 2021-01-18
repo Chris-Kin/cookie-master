@@ -1,46 +1,26 @@
 {
-    "manifest_version": 2,
-    "name": "cookie-master",
-    "version": "0.0.1",
-    "description": "manage website cookies.",
-    "permissions": [
-      "cookies",
-      "tabs",
-      "clipboardRead",
-      "clipboardWrite",
-      "http://*/*",
-      "https://*/*"
-    ],
-    "browser_action": {
-      "default_icon": "asset/logo.png",
-      "default_popup": "html/popup.html",
-      "default_title": "cookie master"
-    },
-    "content_security_policy": "script-src 'self' https://cdnjs.cloudflare.com https://*.cloudflare.com 'unsafe-eval'; blob: filesystem; object-src 'self'",
-    "icons": {
-      "16": "asset/logo.png",
-      "32": "asset/logo.png",
-      "48": "asset/logo.png",
-      "128": "asset/logo.png"
-    },
-    "content_scripts": [
-      {
-        "matches": [
-          "*://*/*"
-        ],
-        "js": [
-          "script/content.js"
-        ],
-        "run_at": "document_idle"
-      }
-    ],
-    "background": {
-      "page": "html/background.html",
-      "persistent": false,
-      "script": ["script/background.js"]
-    },
-    "web_accessible_resources": [
-      "script/inject.js"
-    ]
+  "manifest_version": 2,
+  "name": "cookie-master",
+  "version": "0.0.1",
+  "description": "manage website cookies.",
+  "permissions": [
+    "cookies",
+    "tabs",
+    "clipboardRead",
+    "clipboardWrite",
+    "\u003Call_urls\u003E"
+  ],
+  "browser_action": {
+    "default_icon": "asset/logo.png",
+    "default_popup": "html/popup.html",
+    "default_title": "cookie master"
+  },
+  "content_security_policy": "script-src 'self' https://cdnjs.cloudflare.com https://*.cloudflare.com 'unsafe-eval'; blob filesystem; object-src 'self'",
+  "icons": {
+    "16": "asset/logo.png",
+    "32": "asset/logo.png",
+    "48": "asset/logo.png",
+    "128": "asset/logo.png"
   }
+}
   

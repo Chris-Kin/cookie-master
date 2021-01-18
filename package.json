@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "dev": "rollup --watch --config rollup.config.js",
-    "build": "npm run clean && rollup --config rollup.config.js"
+    "build": "npm run clean && NODE_ENV=prod rollup --config rollup.config.js"
   },
   "repository": {
     "type": "git",
@@ -20,12 +20,15 @@
   },
   "homepage": "https://github.com/Chris-Kin/cookie-master#readme",
   "devDependencies": {
+    "@rollup/plugin-typescript": "^8.1.0",
     "eslint": "^7.17.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "install": "^0.13.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.36.1",
+    "rollup-plugin-copy": "^3.3.0",
+    "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript": "^1.0.1",
     "tslib": "^2.1.0",
     "typescript": "^4.1.3"
