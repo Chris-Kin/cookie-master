@@ -1,81 +1,58 @@
 import {
-    cutFirstDot,
-    getSelectedTabAsync,
-    getCookiesAsync,
+    getCookies,
     removeCookiesAsync,
     setCookiesAsync,
     copy,
     generateURL,
+    Message,
+    Loading,
 } from './shared.js';
-
-// get cookies of current tab's domain (and its father domain)
-function getCookies(list) {
-    return getSelectedTabAsync(null).then(tab => {
-        if (!tab) {
-            return Promise.reject('can not get current tab');
-        }
-        return new URL(tab.url).host;
-    }).then(async domain => {
-        const rootDomain = domain.split('.').slice(-2).join('.');
-        const childDomain = domain.split('.').slice(0, -2);
-    
-        const targetDomainList = [rootDomain];
-    
-        while(childDomain.length) {
-          const dm = childDomain.pop();
-          const child = [dm, targetDomainList[0]].join('.');
-            targetDomainList.unshift(child);
-        }
-
-        const cookies = await getCookiesAsync({ domain: rootDomain });
-
-        return cookies.filter(el => {
-            const elWithoutPot = cutFirstDot(el.domain);
-            return targetDomainList.includes(elWithoutPot);
-        }).sort((a, b) => {
-            return a.domain.length > b.domain.length ? -1 : 1;
-        });
-    }).then((cookies) => {
-        list.value = cookies;
-    });
-}
 
 Vue.createApp({
     setup() {
         const cookieList = Vue.ref([]);
-        
-        getCookies(cookieList);
+
+        getCookies().then(c => cookieList.value = c );
 
         const onImport = async () => {
+            const loading = Loading();
             const input = document.createElement('input');
-            input.style.opacity = '0';
+            input.style.height = '0px';
+            input.style.border = 'none';
+            input.style.position = 'absolute';
             document.body.appendChild(input);
             input.focus();
             document.execCommand('paste');
             try {
                 const cookieFromClipBoard = JSON.parse(input.value);
                 if (!Array.isArray(cookieFromClipBoard)) {
-                    throw Error('please paste a array');
+                    Message({ type: 'warn', text: 'please paste a cookie array' });
+                    throw Error('please paste a cookie array');
                 }
                 await Promise.all(cookieFromClipBoard.map(el => {
                     return setCookiesAsync(el, true);
                 }));
-                getCookies(cookieList);
+                Message({ type: 'success', text: 'data imported successfully' });
+                getCookies().then(c => cookieList.value = c );
             } catch (err) {
-                alert(err || 'data structure is bad, please check it');
+                Message({ type: 'error', text: 'clipboard data structure is bad, please check it' });
+            } finally {
+                loading.close();
+                document.body.removeChild(input);
             }
-            document.body.removeChild(input);
         }
 
         const onCopy = () => {
             copy(JSON.stringify(cookieList.value));
+            Message({ type: 'success', text: 'cookies has been copied' });
         }
 
-        const onPlainCopy = () => {
+        const onFlatCopy = () => {
             const text = cookieList.value.reduce((collect, cur) => {
                 return collect + `${cur.name}=${cur.value}; `;
             }, '')
             copy(text.replace(/;\s$/, ''));
+            Message({ type: 'success', text: 'cookies has been copied in flat form' });
         }
 
         const onClear = () => {
@@ -84,20 +61,22 @@ Vue.createApp({
                 removeCookiesAsync({ name: el.name, url });
             });
             cookieList.value = [];
+            Message({ type: 'success', text: `all cookies has been deleted`});
         }
 
         const onDelete = async i => {
             const cookie = cookieList.value[i];
             const url = generateURL(cookie);
             await removeCookiesAsync({ name: cookie.name, url });
-            getCookies(cookieList);
+            getCookies().then(c => cookieList.value = c );
+            Message({ type: 'success', text: `${cookie.name} has been deleted`});
         }
 
         const toggleSecure = i => {
             const cookie = cookieList.value[i];
             cookie.secure = !cookie.secure;
             setCookiesAsync(cookie).finally(() => {
-                getCookies(cookieList);
+                getCookies().then(c => cookieList.value = c );
             });
         }
 
@@ -106,15 +85,16 @@ Vue.createApp({
             cookie.httpOnly = !cookie.httpOnly;
 
             setCookiesAsync(cookie).finally(() => {
-                getCookies(cookieList);
+                getCookies().then(c => cookieList.value = c );
             });
+            Message({ type: 'success', text: 'good' });
         }
 
         return {
             cookieList,
             onImport,
             onCopy,
-            onPlainCopy,
+            onFlatCopy,
             onClear,
             onDelete,
             toggleSecure,

@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cookie Master</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.5/vue.global.prod.js" crossorigin="anonymous"></script>
+    <script src="../script/vue3.js"></script>
     <link rel="stylesheet" href="../style/popup.css">
 </head>
 <body>
     <div id="app">
         <div class="operation">
             <button title="Copy all cookies" @click="onCopy"><img src="../asset/copy.svg" />copy</button>
-            <button title="Copy with flat data structure" @click="onPlainCopy"><img src="../asset/copy.svg" />flat copy</button>
+            <button title="Copy with flat data structure" @click="onFlatCopy"><img src="../asset/copy.svg" />flat copy</button>
             <button title="Clear all cookies" @click="onClear"><img src="../asset/delete.svg" />clear</button>
             <button title="Import cookies in current root domain which in standard structure" @click="onImport"><img src="../asset/import.svg" />import</button>
         </div>

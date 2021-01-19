@@ -37,6 +37,8 @@ button img {
 .empty-img {
     margin: 0 auto;
     display: block;
+    width: 100px;
+    margin-top: 20px;
 }
 
 .cookie-item {
@@ -115,4 +117,66 @@ button img {
 .list-leave-to {
   opacity: 0;
   transform: scale(0.7);
+}
+
+/* co */
+.co-msg {
+    position: fixed;
+    bottom: 10px;
+    right: 0;
+    color: #fff;
+    background-color: #666;
+    display: flex;
+    align-items: center;
+    min-width: 100px;
+    padding: 6px 12px 6px 7px;
+    height: 30px;
+    opacity: 0.8;
+    box-sizing: border-box;
+    border-radius: 15px 0 0 15px;
+    transition: all 0.4s ease-in;
+}
+.co-msg.is-leaving {
+    opacity: 0;
+    transform: translateX(100%);
+}
+.co-msg div {
+    flex: 1;
+}
+.co-msg img {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+}
+
+.co-loading {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.7);
+}
+.co-loading div {
+    font-size: 10px;
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    /* background-color: #f40; */
+    border-radius: 50%;
+    animation: roll 2s linear infinite;
+    box-shadow: 0 -2em rgba(250, 187, 49, 1), 1.414em -1.414em rgba(250, 187, 49, 0.875), 2em 0 rgba(250, 187, 49, 0.75), 1.414em 1.414em rgba(250, 187, 49, 0.625), 0 2em rgba(250, 187, 49, 0.5), -1.414em 1.414em rgba(250, 187, 49, 0.375), -2em 0 rgba(250, 187, 49, 0.25), -1.414em -1.414em rgba(250, 187, 49, 0.125);
+}
+
+@keyframes roll {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }

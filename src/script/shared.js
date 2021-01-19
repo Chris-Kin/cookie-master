@@ -71,8 +71,11 @@ export const setCookiesAsync = async function(cookie, isInCurrentDoamin) {
     if (isInCurrentDoamin) {
         const tab = await getSelectedTabAsync(null);
         const host = new URL(tab.url).host;
-        adaptedCookie.url = `http://${host}/`;
-        adaptedCookie.domain = `.${host}`;
+        const hostWithoutPort = host.split(':')[0];
+        adaptedCookie.url = `http://${hostWithoutPort}/`;
+        if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(hostWithoutPort) && !hostWithoutPort.includes('localhost')) {
+            adaptedCookie.domain = `.${host}`;
+        }
     }
 
     return new Promise(function (res, rej) {
@@ -83,4 +86,93 @@ export const setCookiesAsync = async function(cookie, isInCurrentDoamin) {
             return res(newCookie);
         });
     });
+}
+
+// get cookies of current tab's domain (and its father domain)
+export function getCookies() {
+    return getSelectedTabAsync(null).then(tab => {
+        if (!tab) {
+            return Promise.reject('can not get current tab');
+        }
+        return new URL(tab.url).host;
+    }).then(async domain => {
+        // ip/localhost
+        if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(domain) || domain.includes('localhost')) {
+            const domainWithoutPort = domain.split(':')[0];
+            const cookies = await getCookiesAsync({ domain: domainWithoutPort });
+            return cookies || [];
+        }
+
+        // regular domain name
+        const rootDomain = domain.split('.').slice(-2).join('.');
+        const childDomain = domain.split('.').slice(0, -2);
+    
+        const targetDomainList = [rootDomain];
+
+        while(childDomain.length) {
+          const dm = childDomain.pop();
+          const child = [dm, targetDomainList[0]].join('.');
+            targetDomainList.unshift(child);
+        }
+
+        const cookies = await getCookiesAsync({ domain: rootDomain });
+
+        return cookies.filter(el => {
+            const elWithoutPot = cutFirstDot(el.domain);
+            return targetDomainList.includes(elWithoutPot);
+        }).sort((a, b) => {
+            return a.domain.length > b.domain.length ? -1 : 1;
+        });
+    });
+}
+
+export function Message(opt = {}) {
+    const { type, text } = opt;
+
+    const $box = document.createElement('div');
+    $box.classList = 'co-msg';
+
+    const $img = document.createElement('img');
+    const imgMap = {
+        success: '../asset/success.svg',
+        warn: '../asset/warn.svg',
+        error: '../asset/error.svg',
+    }
+    $img.src = imgMap[type] || '../asset/success.svg';
+
+    const $text = document.createElement('div');
+
+    $text.innerText = text || 'success~';
+
+    $box.appendChild($img);
+    $box.appendChild($text);
+
+    document.body.appendChild($box);
+
+    setTimeout(() => {
+        $box.classList = 'co-msg is-leaving';
+        // multi props trigger
+        $box.addEventListener('transitionend', () => {
+            document.body.contains($box) && document.body.removeChild($box);
+        });
+    }, 2000);
+}
+
+export function Loading() {
+    const $mask = document.createElement('div');
+    $mask.classList = 'co-loading';
+
+    const $text = document.createElement('div');
+
+    $mask.appendChild($text);
+
+    document.body.appendChild($mask);
+
+    $mask.close = () => {
+        setTimeout(() => {
+            document.body.contains($mask) && document.body.removeChild($mask);
+        }, 300);
+    }
+
+    return $mask;
 }
