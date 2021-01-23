@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "cookie-master",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "manage website cookies.",
   "permissions": [
     "cookies",
@@ -23,4 +23,3 @@
     "128": "asset/logo.png"
   }
 }
-  

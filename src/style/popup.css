@@ -5,7 +5,7 @@
 
 body {
     width: 800px;
-    padding: 20px;
+    padding: 20px 20px 50px;
     box-sizing: border-box;
 }
 
@@ -44,9 +44,9 @@ button img {
 .cookie-item {
     display: flex;
     width: 100%;
-    border-bottom: 1px solid #999;
     color: #666;
     position: relative;
+    margin: 6px 0;
 }
 .cookie-item:first-child {
     color: #000;
@@ -58,23 +58,34 @@ button img {
 }
 .cookie-item:first-child div {
     padding: 10px 6px;
-    background: #f9f9f9;
-    border-top: 1px solid #999;
+}
+.cookie-item:not(:first-child) {
+    position: relative;
+    padding-left: 10px;
+    background: rgba(253, 171, 61, 0.03);
+    transition: all 0.2s;
+}
+.cookie-item:not(:first-child)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    border-radius: 4px 0 0 4px;
+    background-color: rgb(253, 171, 61);
 }
 .cookie-item:not(:first-child):hover {
-    background: #f9f9f9;
+    background: rgba(253, 171, 61, 0.1);
 }
 .cookie-item div {
     flex: 1;
     padding: 6px;
-    border-right: 1px solid #ddd;
+    border-right: 2px solid #fff;
     box-sizing: border-box;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-}
-.cookie-item div:first-child {
-    border-left: 1px solid #ddd;
 }
 .cookie-item .cookie-item-secure {
     flex: 0.5;
@@ -119,6 +130,53 @@ button img {
   transform: scale(0.7);
 }
 
+/* add */
+.add-box {
+    padding: 60px;
+}
+.add-box .add-item {
+    width: 200px;
+    font-size: 16px;
+    margin: 0 auto;
+    display: flex;
+    line-height: 30px;
+    margin-bottom: 10px;
+}
+.add-box .add-item label {
+    width: 60px;
+    flex-shrink: 0;
+    color: #fff;
+    text-align: center;
+    padding: 0 5px;
+    background: rgb(253, 171, 61);
+}
+.add-box .add-item input {
+    flex: 1;
+    border: 2px solid rgb(253, 171, 61);
+    border-left: none;
+    outline: none;
+    padding: 0 5px;
+    font-size: 16px;
+    color: #333;
+}
+.add-box .footer {
+    margin-top: 20px;
+    text-align: center;
+    padding-left: 50px;
+}
+.add-box .footer button {
+    padding: 9px;
+    width: 80px;
+    font-size: 16px;
+}
+.add-box .footer button.positive {
+    color: #fff;
+    background: rgb(253, 171, 61);
+}
+.add-box .footer button:disabled {
+    background: rgb(253, 171, 61, 0.5);
+    cursor: not-allowed;
+}
 /* co */
 .co-msg {
     position: fixed;

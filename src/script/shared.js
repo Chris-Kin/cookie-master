@@ -24,7 +24,6 @@ export function copy(value) {
     copy.value = value;
     copy.select();
     document.execCommand('copy');
-    // alert('复制成功');
     document.body.removeChild(copy);
 }
 
@@ -43,17 +42,22 @@ export const getSelectedTabAsync = promisify(chrome.tabs.getSelected);
 
 export const getCookiesAsync = promisify(chrome.cookies.getAll);
 
+export const getSingleCookieAsync = promisify(chrome.cookies.get);
+
 export const removeCookiesAsync = promisify(chrome.cookies.remove);
 
 export const setCookiesAsync = async function(cookie, isInCurrentDoamin) {
     const adaptedCookie = { ...cookie };
 
-    // chrome doesn't allow set hostOnly & session
+    // ignore hostOnly & session
     delete adaptedCookie.hostOnly;
     delete adaptedCookie.session;
 
     // must set a correct url
-    adaptedCookie.url = generateURL(cookie);
+    adaptedCookie.url = generateURL(adaptedCookie);
+
+    // if path exist, it must equal to current tab's path, so force to set '/'
+    adaptedCookie.path = '/';
 
     /**
      * ensure the accuracy of domain attribute!
@@ -72,8 +76,11 @@ export const setCookiesAsync = async function(cookie, isInCurrentDoamin) {
         const tab = await getSelectedTabAsync(null);
         const host = new URL(tab.url).host;
         const hostWithoutPort = host.split(':')[0];
-        adaptedCookie.url = `http://${hostWithoutPort}/`;
-        if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(hostWithoutPort) && !hostWithoutPort.includes('localhost')) {
+        adaptedCookie.url = `http${adaptedCookie.secure ? 's' : ''}://${hostWithoutPort}/`;
+
+        if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(hostWithoutPort) || hostWithoutPort.includes('localhost')) {
+            delete adaptedCookie.domain;
+        } else {
             adaptedCookie.domain = `.${host}`;
         }
     }
@@ -81,8 +88,10 @@ export const setCookiesAsync = async function(cookie, isInCurrentDoamin) {
     return new Promise(function (res, rej) {
         chrome.cookies.set(adaptedCookie, newCookie => {
             if (!newCookie) {
+                console.log('error in chrome.cookies.set:', adaptedCookie);
                 return rej();
             }
+            console.log('success cookie:', adaptedCookie);
             return res(newCookie);
         });
     });
@@ -100,7 +109,21 @@ export function getCookies() {
         if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(domain) || domain.includes('localhost')) {
             const domainWithoutPort = domain.split(':')[0];
             const cookies = await getCookiesAsync({ domain: domainWithoutPort });
-            return cookies || [];
+            // return cookies || [];
+            return cookies.sort((a, b) => {
+                // domain lenght first, then name first
+                if (a.domain.length > b.domain.length) {
+                    return -1;
+                } else if (a.domain.length === b.domain.length) {
+                    if (a.name > b.name) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                } else {
+                    return 1;
+                }
+            });
         }
 
         // regular domain name
@@ -121,7 +144,18 @@ export function getCookies() {
             const elWithoutPot = cutFirstDot(el.domain);
             return targetDomainList.includes(elWithoutPot);
         }).sort((a, b) => {
-            return a.domain.length > b.domain.length ? -1 : 1;
+            // domain lenght first, then name first
+            if (a.domain.length > b.domain.length) {
+                return -1;
+            } else if (a.domain.length === b.domain.length) {
+                if (a.name > b.name) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else {
+                return 1;
+            }
         });
     });
 }

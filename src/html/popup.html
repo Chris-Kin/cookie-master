@@ -14,14 +14,15 @@
             <button title="Copy with flat data structure" @click="onFlatCopy"><img src="../asset/copy.svg" />flat copy</button>
             <button title="Clear all cookies" @click="onClear"><img src="../asset/delete.svg" />clear</button>
             <button title="Import cookies in current root domain which in standard structure" @click="onImport"><img src="../asset/import.svg" />import</button>
+            <button title="create a new cookie in current domain" @click="isAdding = true"><img src="../asset/add.svg" />add</button>
         </div>
-        <div class="cookie">
+        <div v-show="!isAdding" class="cookie">
             <div class="cookie-item">
-                <div>NAME</div>
-                <div>VALUE</div>
-                <div>DOMAIN</div>
-                <div class="cookie-item-http">HTTP ONLY</div>
-                <div class="cookie-item-secure">SECURE</div>
+                <div>Name</div>
+                <div>Value</div>
+                <div>Domain</div>
+                <div class="cookie-item-http">Http Only</div>
+                <div class="cookie-item-secure">Secure</div>
             </div>
             <transition-group  v-if="cookieList.length" name="list">
                 <div class="cookie-item" v-for="(el, i) in cookieList" :key="`${el.name}${el.value}`">
@@ -37,11 +38,26 @@
                         <img @click="toggleSecure(i)" v-show="!el.secure" src="../asset/uncheck.svg" alt="">
                     </div>
                     <section class="cookie-item-delete">
+                        <img src="../asset/copy.svg" title="delete this cookie" @click="onSingleCopy(i)" />
                         <img src="../asset/delete.svg" title="delete this cookie" @click="onDelete(i)" />
                     </section>
                 </div>
             </transition-group>
             <img v-else class="empty-img" src="../asset/empty.svg" alt="" />
+        </div>
+        <div v-show="isAdding" class="add-box">
+            <div class="add-item">
+                <label>name</label>
+                <input v-model="addingCookie.name" type="text">
+            </div>
+            <div class="add-item">
+                <label>value</label>
+                <input v-model="addingCookie.value" type="text">
+            </div>
+            <div class="footer">
+                <button @click="isAdding = false">cancel</button>
+                <button :disabled="!canAddingCookieSubmit" class="positive" @click="onAdd">ok</button>
+            </div>
         </div>
     </div>
     <script type="module" src="../script/popup.js"></script>

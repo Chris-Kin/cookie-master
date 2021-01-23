@@ -2,6 +2,7 @@ import {
     getCookies,
     removeCookiesAsync,
     setCookiesAsync,
+    getSelectedTabAsync,
     copy,
     generateURL,
     Message,
@@ -11,6 +12,14 @@ import {
 Vue.createApp({
     setup() {
         const cookieList = Vue.ref([]);
+        const isAdding = Vue.ref(false);
+        const addingCookie = Vue.reactive({
+            name: '',
+            value: '',
+        });
+        const canAddingCookieSubmit = Vue.computed(() => {
+            return addingCookie.name && addingCookie.value;
+        });
 
         getCookies().then(c => cookieList.value = c );
 
@@ -25,6 +34,7 @@ Vue.createApp({
             document.execCommand('paste');
             try {
                 const cookieFromClipBoard = JSON.parse(input.value);
+
                 if (!Array.isArray(cookieFromClipBoard)) {
                     Message({ type: 'warn', text: 'please paste a cookie array' });
                     throw Error('please paste a cookie array');
@@ -33,10 +43,10 @@ Vue.createApp({
                     return setCookiesAsync(el, true);
                 }));
                 Message({ type: 'success', text: 'data imported successfully' });
-                getCookies().then(c => cookieList.value = c );
             } catch (err) {
-                Message({ type: 'error', text: 'clipboard data structure is bad, please check it' });
+                Message({ type: 'error', text: 'some cookie set error' });
             } finally {
+                getCookies().then(c => cookieList.value = c );
                 loading.close();
                 document.body.removeChild(input);
             }
@@ -44,7 +54,12 @@ Vue.createApp({
 
         const onCopy = () => {
             copy(JSON.stringify(cookieList.value));
-            Message({ type: 'success', text: 'cookies has been copied' });
+            Message({ type: 'success', text: 'cookies have been copied' });
+        }
+
+        const onSingleCopy = i => {
+            copy(JSON.stringify([cookieList.value[i]]));
+            Message({ type: 'success', text: 'cookie has been copied' });
         }
 
         const onFlatCopy = () => {
@@ -64,6 +79,38 @@ Vue.createApp({
             Message({ type: 'success', text: `all cookies has been deleted`});
         }
 
+        const onAdd = async () => {
+            if (!canAddingCookieSubmit) {
+                Message({ type: 'warn', text: "please input cookie's name and value" });
+                return;
+            }
+            const tab = await getSelectedTabAsync(null);
+            const host = new URL(tab.url).host;
+            const hostWithoutPort = host.split(':')[0];
+            const cookie = {
+                name: addingCookie.name,
+                value: addingCookie.value,
+                domain: hostWithoutPort,
+                expirationDate: new Date('2048-10-24').getTime(),
+                path: '/',
+            }
+            setCookiesAsync(cookie, true).then(() => {
+                Message({ type: 'success', text: 'success' });
+                getCookies().then(c => cookieList.value = c );
+                isAdding.value = false;
+            }).catch(() => {
+                Message({ type: 'error', text: 'failed' });
+            });
+        }
+
+        Vue.watch(isAdding, (cur, prev) => {
+            console.log('dd', cur);
+            if (cur === false) {
+                addingCookie.name = '';
+                addingCookie.value = '';
+            }
+        })
+
         const onDelete = async i => {
             const cookie = cookieList.value[i];
             const url = generateURL(cookie);
@@ -72,22 +119,37 @@ Vue.createApp({
             Message({ type: 'success', text: `${cookie.name} has been deleted`});
         }
 
-        const toggleSecure = i => {
+        const toggleSecure = async i => {
             const cookie = cookieList.value[i];
+
+            // fixed: can not set a secure cookie to unsecure, so delete it first
+            if (cookie.secure) {
+                const url = generateURL(cookie);
+                await removeCookiesAsync({ name: cookie.name, url });
+            }
+
             cookie.secure = !cookie.secure;
-            setCookiesAsync(cookie).finally(() => {
+
+            setCookiesAsync(cookie).then(() => {
+                Message({ type: 'success', text: 'success' });
+            }).catch(() => {
+                Message({ type: 'error', text: 'failed' });
+            }).finally(() => {
                 getCookies().then(c => cookieList.value = c );
             });
         }
 
-        const toggleHttpOnly = i => {
+        const toggleHttpOnly = async i => {
             const cookie = cookieList.value[i];
             cookie.httpOnly = !cookie.httpOnly;
 
-            setCookiesAsync(cookie).finally(() => {
+            setCookiesAsync(cookie).then(() => {
+                Message({ type: 'success', text: 'success' });
+            }).catch(() => {
+                Message({ type: 'error', text: 'failed' });
+            }).finally(() => {
                 getCookies().then(c => cookieList.value = c );
             });
-            Message({ type: 'success', text: 'good' });
         }
 
         return {
@@ -99,6 +161,11 @@ Vue.createApp({
             onDelete,
             toggleSecure,
             toggleHttpOnly,
+            onSingleCopy,
+            onAdd,
+            isAdding,
+            addingCookie,
+            canAddingCookieSubmit,
         }
     }
 }).mount('#app');
