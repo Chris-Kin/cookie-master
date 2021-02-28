@@ -13,6 +13,7 @@ Vue.createApp({
     setup() {
         const cookieList = Vue.ref([]);
         const isAdding = Vue.ref(false);
+        const cookieNameRef = Vue.ref(null);
         const addingCookie = Vue.reactive({
             name: '',
             value: '',
@@ -103,11 +104,14 @@ Vue.createApp({
             });
         }
 
-        Vue.watch(isAdding, (cur, prev) => {
-            console.log('dd', cur);
+        Vue.watch(isAdding, (cur) => {
             if (cur === false) {
                 addingCookie.name = '';
                 addingCookie.value = '';
+            } else {
+                Vue.nextTick(() => {
+                    cookieNameRef.value.focus();
+                });
             }
         })
 
@@ -153,6 +157,7 @@ Vue.createApp({
         }
 
         return {
+            cookieNameRef,
             cookieList,
             onImport,
             onCopy,

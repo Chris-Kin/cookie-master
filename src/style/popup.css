@@ -11,7 +11,24 @@ body {
 
 .operation {
     text-align: right;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #fff;
+    padding-top: 10px;
 }
+
+.help {
+    float: left;
+}
+.help img {
+    width: 24px;
+    opacity: 0.4;
+}
+.help img:hover {
+    opacity: 0.7;
+}
+
 button {
     border: none;
     color: #666;
@@ -47,11 +64,12 @@ button img {
     color: #666;
     position: relative;
     margin: 6px 0;
+    box-sizing: border-box;
 }
 .cookie-item:first-child {
     color: #000;
     position: sticky;
-    top: 0px;
+    top: 30px;
     padding-top: 20px;
     background: #fff;
     z-index: 1;

@@ -9,7 +9,10 @@
 </head>
 <body>
     <div id="app">
-        <div class="operation">
+        <div class="operation" v-show="!isAdding">
+            <a class="help" href="https://chris-kin.github.io/cookie-master-doc/" target="_blank" rel="noopener noreferrer">
+                <img title="help documents" src="../asset/help.svg" />
+            </a>
             <button title="Copy all cookies" @click="onCopy"><img src="../asset/copy.svg" />copy</button>
             <button title="Copy with flat data structure" @click="onFlatCopy"><img src="../asset/copy.svg" />flat copy</button>
             <button title="Clear all cookies" @click="onClear"><img src="../asset/delete.svg" />clear</button>
@@ -48,7 +51,7 @@
         <div v-show="isAdding" class="add-box">
             <div class="add-item">
                 <label>name</label>
-                <input v-model="addingCookie.name" type="text">
+                <input v-model="addingCookie.name" ref="cookieNameRef" type="text">
             </div>
             <div class="add-item">
                 <label>value</label>
