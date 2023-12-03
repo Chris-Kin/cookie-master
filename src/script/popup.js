@@ -34,7 +34,24 @@ Vue.createApp({
             input.focus();
             document.execCommand('paste');
             try {
-                const cookieFromClipBoard = JSON.parse(input.value);
+                let cookieFromClipBoard = [];
+
+                // json array format
+                if (/^\[\{.*\}\]$/.test(input.value)) {
+                    cookieFromClipBoard = JSON.parse(input.value);
+                } else {
+                    debugger
+                    const itemStrArray = input.value.split(/\s*;\s*/);
+                    itemStrArray.forEach(item => {
+                        const [name, value] = item.split('=');
+                        if (name && value) {
+                            cookieFromClipBoard.push({
+                                name: name,
+                                value: value
+                            })
+                        }
+                    });
+                }
 
                 if (!Array.isArray(cookieFromClipBoard)) {
                     Message({ type: 'warn', text: 'please paste a cookie array' });
