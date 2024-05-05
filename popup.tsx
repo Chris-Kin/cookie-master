@@ -72,17 +72,31 @@ function IndexPopup() {
     input.focus()
     document.execCommand("paste")
     try {
-      let cookieFromClipBoard
+      let cookieFromClipBoard = []
       try {
-        cookieFromClipBoard = JSON.parse(input.value)
+        // json array format
+        if (/^\[\{.*\}\]$/.test(input.value)) {
+          cookieFromClipBoard = JSON.parse(input.value)
+        } else {
+          const itemStrArray = input.value.split(/\s*;\s*/)
+          itemStrArray.forEach((item) => {
+            const [name, value] = item.split("=")
+            if (name && value) {
+              cookieFromClipBoard.push({
+                name: name,
+                value: value
+              })
+            }
+          })
+        }
       } catch {
-        cookieFromClipBoard = ""
+        // cookieFromClipBoard = []
       }
 
-      if (!Array.isArray(cookieFromClipBoard)) {
+      if (!Array.isArray(cookieFromClipBoard) || !cookieFromClipBoard.length) {
         Message({
           type: "warn",
-          text: "please paste a cookie array"
+          text: "please paste a cookie array or format like 'foo=bar; bez=qez'"
         })
         return
       }

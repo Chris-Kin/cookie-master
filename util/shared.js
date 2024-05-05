@@ -71,7 +71,7 @@ export const setCookiesAsync = async function(cookie, isInCurrentDoamin) {
      * Otherwise:
      *   Set the cookie's host-only-flag to true
      */
-    if (!cookie.domain.startsWith('.')) {
+    if (!cookie.domain?.startsWith('.')) {
         delete adaptedCookie.domain;
     }
 
