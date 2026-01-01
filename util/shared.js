@@ -170,7 +170,7 @@ export function Message(opt = {}) {
     const { type, text } = opt;
 
     const $box = document.createElement('div');
-    $box.classList = 'co-msg';
+    $box.className = 'fixed bottom-2 right-0 text-white bg-gray-600 flex items-center min-w-[100px] px-3 pr-4 h-[30px] opacity-80 box-border rounded-l-full transition-all duration-400 ease-in';
 
     const $img = document.createElement('img');
     const imgMap = {
@@ -179,8 +179,10 @@ export function Message(opt = {}) {
         error: ErrorImg,
     }
     $img.src = imgMap[type] || SuccessImg;
+    $img.className = 'w-5 h-5 mr-3';
 
     const $text = document.createElement('div');
+    $text.className = 'text-sm';
 
     $text.innerText = text || 'success~';
 
@@ -190,7 +192,7 @@ export function Message(opt = {}) {
     document.body.appendChild($box);
 
     setTimeout(() => {
-        $box.classList = 'co-msg is-leaving';
+        $box.className = 'fixed bottom-2 right-0 text-white bg-gray-600 flex items-center min-w-[100px] px-3 pr-4 h-[30px] box-border rounded-l-full transition-all duration-400 ease-in opacity-0 translate-x-full';
         // multi props trigger
         $box.addEventListener('transitionend', () => {
             document.body.contains($box) && document.body.removeChild($box);
@@ -200,10 +202,10 @@ export function Message(opt = {}) {
 
 export function Loading() {
     const $mask = document.createElement('div');
-    $mask.classList = 'co-loading';
+    $mask.className = 'fixed inset-0 z-10 bg-white/70';
 
     const $text = document.createElement('div');
-
+    $text.className = 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full border-4 border-amber-400 border-t-transparent animate-spin';
     $mask.appendChild($text);
 
     document.body.appendChild($mask);

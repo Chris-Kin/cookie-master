@@ -232,30 +232,32 @@ function IndexPopup() {
 
   if (isAdding) {
     return (
-      <div id="app">
-        <div className="add-box">
-          <div className="add-item">
-            <label>name</label>
+      <div id="app" className="w-[800px] box-border p-5 pb-12">
+        <div className="py-16">
+          <div className="w-[200px] mx-auto mb-2 flex items-center text-base">
+            <label className="w-[60px] shrink-0 h-9 flex items-center justify-center text-white px-1.5 bg-amber-400">name</label>
             <input
+              className="h-9 flex-1 border-2 border-amber-400 border-l-0 outline-none px-2 text-base text-gray-800"
               type="text"
               ref={cookieNameRef}
               value={addingCookie.name}
               onChange={handleNameInput}
             />
           </div>
-          <div className="add-item">
-            <label>value</label>
+          <div className="w-[200px] mx-auto mb-2 flex items-center text-base">
+            <label className="w-[60px] shrink-0 h-9 flex items-center justify-center text-white px-1.5 bg-amber-400">value</label>
             <input
+              className="h-9 flex-1 border-2 border-amber-400 border-l-0 outline-none px-2 text-base text-gray-800"
               type="text"
               value={addingCookie.value}
               onChange={handleValueInput}
             />
           </div>
-          <div className="footer">
-            <button onClick={() => setIsAdding(false)}>cancel</button>
+          <div className="mt-5 text-center pl-12">
+            <button className="px-3 py-2 w-20 text-base text-gray-600 rounded bg-gray-100 hover:bg-gray-200 mr-2" onClick={() => setIsAdding(false)}>cancel</button>
             <button
               disabled={!canAddingCookieSubmit}
-              className="positive"
+              className="px-3 py-2 w-20 text-base text-white rounded bg-amber-400 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={onAdd}>
               ok
             </button>
@@ -267,94 +269,100 @@ function IndexPopup() {
 
   return (
     <>
-      <div id="app">
-        <div className="operation">
-          <a
-            className="help"
-            href="https://chris-kin.github.io/cookie-master-doc/"
-            target="_blank"
-            rel="noopener noreferrer">
-            <img title="help documents" src={HelpImg} />
-          </a>
-          <button title="Copy all cookies" onClick={onCopy}>
-            <img src={CopyImg} />
-            copy
-          </button>
-          <button title="Copy with flat data structure" onClick={onFlatCopy}>
-            <img src={CopyImg} />
-            flat copy
-          </button>
-          <button title="Clear all cookies" onClick={onClear}>
-            <img src={DeleteImg} />
-            clear
-          </button>
-          <button
-            title="Import cookies in current root domain which in standard structure"
-            onClick={onImport}>
-            <img src={ImportImg} />
-            import
-          </button>
-          <button
-            title="create a new cookie in current domain"
-            onClick={() => setIsAdding(true)}>
-            <img src={AddImg} />
-            add
-          </button>
+      <div id="app" className="w-[800px] box-border p-5 pb-12">
+        <div className="sticky top-0 z-20 bg-white pt-2">
+          <div className="flex items-center justify-between">
+            <a
+              className="opacity-40 hover:opacity-70"
+              href="https://chris-kin.github.io/cookie-master-doc/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img className="w-6" title="help documents" src={HelpImg} />
+            </a>
+            <div className="flex items-center justify-end">
+              <button className="ml-2 inline-flex items-center px-2 py-1.5 text-gray-600 rounded bg-gray-100 hover:bg-gray-200" title="Copy all cookies" onClick={onCopy}>
+                <img className="w-4 h-4 mr-1" src={CopyImg} />
+                copy
+              </button>
+              <button className="ml-2 inline-flex items-center px-2 py-1.5 text-gray-600 rounded bg-gray-100 hover:bg-gray-200" title="Copy with flat data structure" onClick={onFlatCopy}>
+                <img className="w-4 h-4 mr-1" src={CopyImg} />
+                flat copy
+              </button>
+              <button className="ml-2 inline-flex items-center px-2 py-1.5 text-gray-600 rounded bg-gray-100 hover:bg-gray-200" title="Clear all cookies" onClick={onClear}>
+                <img className="w-4 h-4 mr-1" src={DeleteImg} />
+                clear
+              </button>
+              <button className="ml-2 inline-flex items-center px-2 py-1.5 text-gray-600 rounded bg-gray-100 hover:bg-gray-200" title="Import cookies in current root domain which in standard structure" onClick={onImport}>
+                <img className="w-4 h-4 mr-1" src={ImportImg} />
+                import
+              </button>
+              <button className="ml-2 inline-flex items-center px-2 py-1.5 text-gray-600 rounded bg-gray-100 hover:bg-gray-200" title="create a new cookie in current domain" onClick={() => setIsAdding(true)}>
+                <img className="w-4 h-4 mr-1" src={AddImg} />
+                add
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="cookie">
-          <div className="cookie-item">
-            <div>Name</div>
-            <div>Value</div>
-            <div>Domain</div>
-            <div className="cookie-item-http">Http Only</div>
-            <div className="cookie-item-secure">Secure</div>
+        <div>
+          <div className="grid grid-cols-[2fr_2fr_1.5fr_1fr_1.5fr] sticky top-9 z-10 bg-white py-3 divide-x-2 divide-white">
+            <div className="px-2 text-gray-700 font-medium">Name</div>
+            <div className="px-2 text-gray-700 font-medium">Value</div>
+            <div className="px-2 text-gray-700 font-medium">Domain</div>
+            <div className="px-2 text-gray-700 font-medium">Http Only</div>
+            <div className="px-2 text-gray-700 font-medium">Secure</div>
           </div>
           {!cookieList.length ? (
-            <img className="empty-img" src={EmptyImg} alt="" />
+            <img className="mx-auto block w-24 mt-5" src={EmptyImg} alt="" />
           ) : (
             cookieList.map((el, i) => {
               return (
-                <div className="cookie-item" key={`${el.name}${el.value}`}>
-                  <div title={el.name}>{el.name}</div>
-                  <div title={el.value}>{el.value}</div>
-                  <div>{el.domain}</div>
-                  <div className="cookie-item-http">
+                <div className="group relative grid grid-cols-[2fr_2fr_1.5fr_1fr_1.5fr] w-full text-gray-600 my-1 min-h-12 py-2 items-center bg-neutral-50 hover:bg-neutral-100 transition-all duration-200 divide-x-2 divide-white" key={`${el.name}${el.value}`}>
+                  <div className="truncate px-2" title={el.name}>{el.name}</div>
+                  <div className="truncate px-2" title={el.value}>{el.value}</div>
+                  <div className="truncate px-2">{el.domain}</div>
+                  <div className="flex items-center justify-start px-2">
                     {el.httpOnly ? (
                       <img
+                        className="w-5 cursor-pointer"
                         onClick={() => toggleHttpOnly(i)}
                         src={CheckImg}
                         alt=""
                       />
                     ) : (
                       <img
+                        className="w-5 cursor-pointer"
                         onClick={() => toggleHttpOnly(i)}
                         src={UncheckImg}
                         alt=""
                       />
                     )}
                   </div>
-                  <div className="cookie-item-secure">
+                  <div className="flex items-center justify-start px-2">
                     {el.secure ? (
                       <img
+                        className="w-5 cursor-pointer"
                         onClick={() => toggleSecure(i)}
                         src={CheckImg}
                         alt=""
                       />
                     ) : (
                       <img
+                        className="w-5 cursor-pointer"
                         onClick={() => toggleSecure(i)}
                         src={UncheckImg}
                         alt=""
                       />
                     )}
                   </div>
-                  <section className="cookie-item-delete">
+                  <section className="hidden absolute right-1 top-1/2 -translate-y-1/2 group-hover:flex items-center gap-1 whitespace-nowrap">
                     <img
+                      className="w-5 cursor-pointer opacity-30 hover:opacity-100 mr-1"
                       src={CopyImg}
                       title="copy this cookie"
                       onClick={() => onSingleCopy(i)}
                     />
                     <img
+                      className="w-5 cursor-pointer opacity-30 hover:opacity-100"
                       src={DeleteImg}
                       title="delete this cookie"
                       onClick={() => onDelete(i)}

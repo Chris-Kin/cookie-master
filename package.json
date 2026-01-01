@@ -1,7 +1,7 @@
 {
   "name": "cookie-master",
   "displayName": "Cookie master",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "manage website cookies.",
   "author": "misuhoom@gmail.com",
   "scripts": {
@@ -21,7 +21,10 @@
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
     "prettier": "3.2.4",
-    "typescript": "5.3.3"
+    "typescript": "5.3.3",
+    "tailwindcss": "3.4.15",
+    "postcss": "8.4.47",
+    "autoprefixer": "10.4.20"
   },
   "manifest": {
     "host_permissions": [
